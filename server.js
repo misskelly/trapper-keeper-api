@@ -15,8 +15,8 @@ app.get('/api/v1/keeper', (request, response) => {
 })
 
 app.get('/api/v1/keeper/:id', (request, response) => {
-  const id = request.params.id;
-  const matchingKeeper = app.locals.keeper.find(keep => keep.id == id)
+  const id = parseInt(request.params.id);
+  const matchingKeeper = app.locals.keeper.find(keep => keep.id === id)
   return response.status(200).json(matchingKeeper)
 })
 
