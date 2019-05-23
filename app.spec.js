@@ -93,6 +93,10 @@ describe('api', () => {
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual('updated')
+      expect(app.locals.notes).toEqual([
+        { id: 1, title: 'example11', listItems: [{ text: 'example list item 1', id: 1 }] },
+        { id: 2, title: 'example2', listItems: [{ text: 'example list item 2', id: 2 }] }
+      ])
     })
   })
 
