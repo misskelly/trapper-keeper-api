@@ -42,4 +42,23 @@ app.post('/api/v1/notes', (request, response) => {
   response.status(201).json(newNote)
 })
 
+app.patch('/api/v1/notes/:id', (request, response) => {
+  const {title, listItems} = request.body
+  // console.log(listItems)
+  const id = parseInt(request.params.id)
+  let noteWasFound = false
+  let updatedNotes = app.locals.notes.map((note) => {
+    if (note.id === id) {
+      noteWasFound = true;
+      return {id, title, listItems}
+    }
+  })
+
+  if(!title || !listItems) return response.status(422).json('please enter a title and listItems')
+  if (!noteWasFound) return response.status(404).json('Note not found');
+
+  app.locals.notes = updatedNotes;
+  return response.status(204).json();
+})
+
 module.exports = app;
