@@ -96,6 +96,32 @@ describe('api', () => {
     })
   })
 
-  
+  describe('DELETE /api/v1/notes/;id', () => {
+    let notes
+    beforeEach(() => {
+      notes = [
+        { id: 1, title: 'example1', listItems: [{ text: 'example list item 1', id: 1 }] },
+        { id: 2, title: 'example2', listItems: [{ text: 'example list item 2', id: 2 }] }
+      ]
+
+      app.locals.notes = notes
+    })
+
+    it('should return a status of 404 if trying to delete something that doesnt exist', async () => {
+      const response = await request(app).delete('/api/v1/notes/9001')
+
+      expect(response.status).toBe(404)
+      expect(response.body).toEqual('Note not found')
+    })
+
+    it('should delete the note with the matching id', async () => {
+      const response = await request(app).delete('/api/v1/notes/1')
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual('deleted')
+      expect(app.locals.notes).toEqual( [{ id: 2, title: 'example2', listItems: [{ text: 'example list item 2', id: 2 }] }] )
+
+    })
+  })
 })
 
