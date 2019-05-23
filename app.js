@@ -13,16 +13,15 @@ const mockList = { title: 'example', id: 1, listItems: [{ id: 111, text: 'exampl
 
 app.locals.notes = [mockList];
 
-app.use(express.json());
-
 app.get('/api/v1/notes', (request, response) => {
   response.status(200).json(app.locals.notes)
 })
 
 app.get('/api/v1/notes/:id', (request, response) => {
   const id = parseInt(request.params.id);
-  const matchingNotes = app.locals.notes.find(keep => keep.id === id)
-  return response.status(200).json(matchingNotes)
+  const matchingNote = app.locals.notes.find(note => note.id === id)
+  if (!matchingNote) return response.status(404).json('Note not found')
+  return response.status(200).json(matchingNote)
 })
 
 app.post('/api/v1/notes', (request, response) => {
@@ -50,6 +49,8 @@ app.patch('/api/v1/notes/:id', (request, response) => {
     if (note.id === id) {
       noteWasFound = true;
       return {id, title, listItems}
+    } else {
+      return note
     }
   })
 
@@ -57,7 +58,7 @@ app.patch('/api/v1/notes/:id', (request, response) => {
   if (!noteWasFound) return response.status(404).json('Note not found');
 
   app.locals.notes = updatedNotes;
-  return response.status(200).json(updatedNotes)
+  return response.status(200).json('updated')
 })
 
 app.delete('/api/v1/notes/:id', (request, response) => {
