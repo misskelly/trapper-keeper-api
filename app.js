@@ -13,16 +13,15 @@ const mockList = { title: 'example', id: 1, listItems: [{ id: 111, text: 'exampl
 
 app.locals.notes = [mockList];
 
-app.use(express.json());
-
 app.get('/api/v1/notes', (request, response) => {
   response.status(200).json(app.locals.notes)
 })
 
 app.get('/api/v1/notes/:id', (request, response) => {
   const id = parseInt(request.params.id);
-  const matchingNotes = app.locals.notes.find(keep => keep.id === id)
-  return response.status(200).json(matchingNotes)
+  const matchingNote = app.locals.notes.find(note => note.id === id)
+  if (!matchingNote) return response.status(404).json('Note not found')
+  return response.status(200).json(matchingNote)
 })
 
 app.post('/api/v1/notes', (request, response) => {
@@ -45,15 +44,15 @@ app.post('/api/v1/notes', (request, response) => {
 app.patch('/api/v1/notes/:id', (request, response) => {
   const {title, listItems} = request.body
   const id = parseInt(request.params.id)
-  console.log(id)
   let noteWasFound = false
   let updatedNotes = app.locals.notes.map((note) => {
     if (note.id === id) {
       noteWasFound = true;
       return {id, title, listItems}
+    } else {
+      return note
     }
   })
-  console.log(updatedNotes)
 
   if(!title || !listItems) return response.status(422).json('please enter a title and listItems')
   if (!noteWasFound) return response.status(404).json('Note not found');
