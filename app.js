@@ -58,7 +58,7 @@ app.patch('/api/v1/notes/:id', (request, response) => {
   if (!noteWasFound) return response.status(404).json('Note not found');
 
   app.locals.notes = updatedNotes;
-  return response.status(200).json(updatedNotes)
+  return response.status(200).json('updated')
 })
 
 app.delete('/api/v1/notes/:id', (request, response) => {

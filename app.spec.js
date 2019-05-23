@@ -57,6 +57,44 @@ describe('api', () => {
       expect(response.body).toEqual({id: 10, title: 'hi', listItems: [] })
     })
   })
+  describe('PATCH /api/v1/notes/:id', () => {
+    let notes
+    beforeEach(() => {
+      notes = [
+        { id: 1, title: 'example1', listItems: [{ text: 'example list item 1', id: 1 }] },
+        { id: 2, title: 'example2', listItems: [{ text: 'example list item 2', id: 2 }] }
+      ]
+
+      app.locals.notes = notes
+    })
+
+    it('should return a status 404 the wrong path id is used', async () => {
+      const response = await request(app)
+      .patch('/api/v1/notes/9001')
+      .send({ title: 'example11', listItems: [{ text: 'example list item 1', id: 1 }] })
+
+      expect(response.status).toBe(404)
+      expect(response.body).toEqual('Note not found')
+    })
+  
+    it('should return a status 422 if title or listItems are not entered', async () => {
+      const response = await request(app)
+      .patch('/api/v1/notes/1')
+      .send({ title: 'example11' })
+
+      expect(response.status).toBe(422)
+      expect(response.body).toEqual('please enter a title and listItems')
+    })
+  
+    it('should return a status 200 if the correct params are passed in', async () => {
+      const response = await request(app)
+      .patch('/api/v1/notes/1')
+      .send({title: 'example11', listItems: [{ text: 'example list item 1', id: 1 }] })
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual('updated')
+    })
+  })
 
   
 })
