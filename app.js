@@ -44,7 +44,6 @@ app.post('/api/v1/notes', (request, response) => {
 
 app.patch('/api/v1/notes/:id', (request, response) => {
   const {title, listItems} = request.body
-  // console.log(listItems)
   const id = parseInt(request.params.id)
   let noteWasFound = false
   let updatedNotes = app.locals.notes.map((note) => {
