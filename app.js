@@ -25,4 +25,21 @@ app.get('/api/v1/notes/:id', (request, response) => {
   return response.status(200).json(matchingNotes)
 })
 
+app.post('/api/v1/notes', (request, response) => {
+  const {title, listItems} = request.body
+  if (!title || !listItems) return response.status(422).json('please provide a title and listItems')
+  const listItemsWithId = listItems.map((item) => {
+    if (item.text) {
+      return {text: item.text, id: Date.now()}
+    }
+  })
+  const newNote = {
+    id: Date.now(),
+    title,
+    listItems: listItemsWithId
+  }
+  app.locals.notes.push(newNote)
+  response.status(201).json(newNote)
+})
+
 module.exports = app;
