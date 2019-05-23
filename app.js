@@ -45,6 +45,7 @@ app.post('/api/v1/notes', (request, response) => {
 app.patch('/api/v1/notes/:id', (request, response) => {
   const {title, listItems} = request.body
   const id = parseInt(request.params.id)
+  console.log(id)
   let noteWasFound = false
   let updatedNotes = app.locals.notes.map((note) => {
     if (note.id === id) {
@@ -52,12 +53,25 @@ app.patch('/api/v1/notes/:id', (request, response) => {
       return {id, title, listItems}
     }
   })
+  console.log(updatedNotes)
 
   if(!title || !listItems) return response.status(422).json('please enter a title and listItems')
   if (!noteWasFound) return response.status(404).json('Note not found');
 
   app.locals.notes = updatedNotes;
-  return response.status(204).json();
+  return response.status(200).json(updatedNotes)
+})
+
+app.delete('/api/v1/notes/:id', (request, response) => {
+  const id = parseInt(request.params.id)
+  // console.log('hi', id)
+  // console.log('hi2', app.locals.notes)
+  const index = app.locals.notes.findIndex(note => note.id == id);
+  // console.log(index)
+  if(index === -1) return response.status(404).json('Note not found')
+
+  app.locals.notes.splice(index, 1)
+  return response.status(200).json('deleted')
 })
 
 module.exports = app;
