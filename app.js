@@ -9,7 +9,7 @@ app.use(express.json())
 
 
 app.locals.title = 'trapper-keeper';
-const mockList = { title: 'example', id: 1, listItems: [{ id: 111, text: 'example list item' }] }
+const mockList = { title: 'example', id: 1, listItems: [{ id: 111, text: 'example list item', completed: false }] }
 
 app.locals.notes = [mockList];
 
