@@ -29,7 +29,7 @@ app.post('/api/v1/notes', (request, response) => {
   if (!title || !listItems) return response.status(422).json('please provide a title and listItems')
   const listItemsWithId = listItems.map((item) => {
     if (item.text) {
-      return {text: item.text, id: Date.now()}
+      return {text: item.text, completed: false, id: Date.now()}
     }
   })
   const newNote = {
