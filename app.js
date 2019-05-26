@@ -27,13 +27,13 @@ app.get('/api/v1/notes/:id', (request, response) => {
 app.post('/api/v1/notes', (request, response) => {
   const {title, listItems} = request.body
   if (!title || !listItems) return response.status(422).json('please provide a title and listItems')
-  const listItemsWithId = listItems.map((item) => {
+  const listItemsWithId = listItems.map((item, i) => {
     if (item.text) {
-      return {text: item.text, completed: false, id: Date.now()}
+      return { text: item.text, completed: false, id: Math.floor(Math.random() * 100000)}
     }
   })
   const newNote = {
-    id: Date.now(),
+    id: Math.floor(Math.random() * 100000),
     title,
     listItems: listItemsWithId
   }
